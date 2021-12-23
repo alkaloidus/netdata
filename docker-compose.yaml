@@ -1,0 +1,38 @@
+version: '3'
+services:
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: netdata
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Belgrade
+    ports:
+      - 19999:19999
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+#      - /mnt/2tb/appdata/netdata/netdataconfig:/etc/netdata
+#      - /mnt/2tb/appdata/netdata/netdatalib:/var/lib/netdata
+#      - /mnt/2tb/appdata/netdata/netdatacache:/var/cache/netdata
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    networks:
+      - private
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
+networks:
+    private:
+        external: true
